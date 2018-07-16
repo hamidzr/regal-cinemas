@@ -1,0 +1,15 @@
+{
+  "name": "regal-seatmap",
+  "version": "1.0.0",
+  "description": "shows available seats for different regal theater/movies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hamid Zare",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "jsdom": "^11.11.0"
+  }
+}

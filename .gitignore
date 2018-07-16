@@ -1,0 +1,8 @@
+node_modules/
+package-lock.json
+.env
+*.log
+*.tmp
+*.pid
+# puppeteer userprofiles
+*.profile
