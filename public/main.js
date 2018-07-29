@@ -6,6 +6,16 @@ var app = new Vue({
     seats: [],
   },
 
+  computed: {
+    occupiedSeats() {
+      return this.seats.filter(s => !s.isAvailable);
+    },
+
+    availableSeats() {
+      return this.seats.filter(s => s.isAvailable);
+    },
+  },
+
   methods: {
     async getSeats() {
       this.isFetchingSeats = true;
