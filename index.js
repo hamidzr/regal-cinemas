@@ -1,11 +1,14 @@
 const axios = require('axios'),
+  express = require('express'),
+  app = express(),
   jsdom = require('jsdom'),
   { JSDOM } = jsdom;
 
-const id = 265364694;
+const PORT = process.env.PORT || 3000;
 
 function getSeats(id) {
   if (!id) throw new Error('no id');
+  console.log(`getting seats for theater/movie ${id}`)
 
   return axios({
     method: 'get',
@@ -29,11 +32,37 @@ function getSeats(id) {
     });
 }
 
-getSeats(id)
-  .then(seats => {
-    // console.log(seats);
-    console.log(seats
-      .filter(s => !s.isAvailable)
-      .map(s => s.name));
-  })
-  .catch(console.error);
+app.use(express.static('public'));
+
+app.get('/theaters/:theaterId/seats', async (req, res) => {
+  let theaterId = req.params.theaterId;
+  let seats;
+  if (!theaterId) {
+    return res.status(404).send('theater not found');
+  }
+  try {
+    seats = await getSeats(theaterId);
+  } catch (e) {
+    return res.status(500).send(`something went wrong`);
+  }
+  res.json(seats);
+})
+
+app.get('/theaters/:theaterId/seats/occupied', async (req, res) => {
+  let theaterId = req.params.theaterId;
+  let seats;
+  if (!theaterId) {
+    return res.status(404).send('theater not found');
+  }
+  try {
+    seats = await getSeats(theaterId);
+  } catch (e) {
+    return res.status(500).send(`something went wrong`);
+  }
+  let unavailableSeats = seats
+    .filter(s => !s.isAvailable)
+    .map(s => s.name);
+  res.send(unavailableSeats.join(', '));
+})
+
+app.listen(PORT, () => console.log('app listening on port', PORT))
