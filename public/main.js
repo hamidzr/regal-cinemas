@@ -17,14 +17,14 @@ var app = new Vue({
   },
 
   created() {
-    this.theaterId = this.readTheaterId();
+    this.theaterId = this.readTheaterIdHash() || this.readTheaterIdCookie();
   },
 
   methods: {
     async getSeats() {
       this.isFetchingSeats = true;
       if (!this.validateInput()) throw new Error(`invalid theaterId ${this.theaterId}`);
-      this.setTheaterId(this.theaterId);
+      this.setTheaterIdCookie(this.theaterId);
       let seats = await this.fetchSeats(this.theaterId);
       this.isFetchingSeats = false;
       this.seats = seats;
@@ -51,14 +51,19 @@ var app = new Vue({
       }
     },
 
-    readTheaterId() {
+    readTheaterIdHash() {
+      if (!location.hash) return null;
+      return location.hash.substring(1);
+    },
+
+    readTheaterIdCookie() {
       let c = document.cookie
       let id = '';
       if (c.match(/theaterId=(\d+)/)) id = c.match(/theaterId=(\d+)/)[1];
       return id;
     },
 
-    setTheaterId(id) {
+    setTheaterIdCookie(id) {
       document.cookie = 'theaterId=' + id;
     },
 
