@@ -25,6 +25,7 @@ var app = new Vue({
       this.isFetchingSeats = true;
       if (!this.validateInput()) throw new Error(`invalid theaterId ${this.theaterId}`);
       this.setTheaterIdCookie(this.theaterId);
+      this.setTheaterIdHash(this.theaterId);
       let seats = await this.fetchSeats(this.theaterId);
       this.isFetchingSeats = false;
       this.seats = seats;
@@ -49,6 +50,10 @@ var app = new Vue({
       } catch(e) {
         return false;
       }
+    },
+
+    setTheaterIdHash(theaterId) {
+      location.hash = '#' + theaterId;
     },
 
     readTheaterIdHash() {
